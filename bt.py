@@ -2,6 +2,8 @@ import backtrader
 import datetime
 from strategies import TestStrategy
 
+# example from https://www.youtube.com/watch?v=K8buXUxEfMc&list=PLpf4_DgAsgLFWuT2uV3NItcV4elJUc78J&index=3
+
 cerebro = backtrader.Cerebro() # initiate cerebro object
 
 cerebro.broker.set_cash(1000000) # gave broker attribute an initial value of 1 million
