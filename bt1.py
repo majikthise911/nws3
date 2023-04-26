@@ -1,14 +1,10 @@
-import backtrader 
+import backtrader
 import datetime
-from strategies import TestStrategy
+from strategies1 import TestStrategy
 
-# example from https://www.youtube.com/watch?v=K8buXUxEfMc&list=PLpf4_DgAsgLFWuT2uV3NItcV4elJUc78J&index=3
+cerebro = backtrader.Cerebro()
 
-cerebro = backtrader.Cerebro() # initiate cerebro object
-
-cerebro.broker.set_cash(1000000) # gave broker attribute an initial value of 1 million
-
-print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())
+cerebro.broker.setcash(1000000)
 
 # Create a Data Feed
 data = backtrader.feeds.YahooFinanceCSVData(
@@ -19,10 +15,11 @@ data = backtrader.feeds.YahooFinanceCSVData(
     todate=datetime.datetime(2000, 12, 31),
     reverse=False)
 
-# Connect the Data Feed to Cerebro
 cerebro.adddata(data)
 
 cerebro.addstrategy(TestStrategy)
+
+print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())
 
 cerebro.run()
 
