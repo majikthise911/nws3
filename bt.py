@@ -1,31 +1,27 @@
-import backtrader 
-import datetime
-from strategies import TestStrategy
+import backtrader as bt
 
-# example from https://www.youtube.com/watch?v=K8buXUxEfMc&list=PLpf4_DgAsgLFWuT2uV3NItcV4elJUc78J&index=3
+class PrintClose(bt.Strategy):
 
-cerebro = backtrader.Cerebro() # initiate cerebro object
+    def __init__(self):
+        # Keep a reference to the "close" line in the data[0] dataseries
+        self.dataclose = self.datas[0].close
 
-cerebro.broker.set_cash(1000000) # gave broker attribute an initial value of 1 million
+    def log(self, txt, dt=None):
+        dt = dt or self.datas[0].datetime.date(0)
+        print(f'{dt.isoformat()} {txt}') # Print date and close
 
-print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())
+    def next(self):
+        self.log('Close: ' + str(self.dataclose[0]))  # Convert the float to a string
 
-# Create a Data Feed
-data = backtrader.feeds.YahooFinanceCSVData(
-    dataname='oracle.csv',
-    # Do not pass values before this date
-    fromdate=datetime.datetime(2000, 1, 1),
-    # Do not pass values after this date
-    todate=datetime.datetime(2000, 12, 31),
-    reverse=False)
+# Instantiate Cerebro engine
+cerebro = bt.Cerebro()
 
-# Connect the Data Feed to Cerebro
+# Add data feed to Cerebro
+data = bt.feeds.YahooFinanceCSVData(dataname='TSLA.csv', datetime=0)
 cerebro.adddata(data)
 
-cerebro.addstrategy(TestStrategy)
+# Add strategy to Cerebro
+cerebro.addstrategy(PrintClose)
 
+# Run Cerebro Engine
 cerebro.run()
-
-print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
-
-cerebro.plot()
